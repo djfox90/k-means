@@ -1,6 +1,8 @@
 import random
 import math
-import numpy
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
 
 def read_file():
     fileName = "kmeans 4 input3.txt" # find k size
@@ -10,7 +12,7 @@ def read_file():
             k = i
             
     count = 0;
-    with open("C:/Users/djfox/OneDrive/Desktop/assignment/kmeans 4 input4.txt") as f_n:# read in int
+    with open("/home/djfox232/kmap/kmeans 4 input.txt") as f_n:# read in int
         line = [line.strip().split() for line in f_n]
     for i in line:
         kgroup =random.randrange(1,int(k)+1)
@@ -23,9 +25,8 @@ def read_file():
         clust= random.randrange(0,count)
         cluster[i][0] = int(line[clust][0])
         cluster[i][1] = int(line[clust][1])
-    print("oringanl cluster point")
-    print(cluster)
-    mean = 0
+   
+    
     
     checker = [[0 for x in range(3)] for y in range(int(k))]
     for i in range(int(k)): # loop to find intial x and y for cluster centroid
@@ -85,17 +86,35 @@ def read_file():
         for i in range(int(k)): # loop to find to reset for cluster centroid
                 if(cluster[i][0] == checker[i][0] and cluster[i][1] == checker[i][1]):
                     t = t + 1
-    nextLine = 0              
-    outputFile = open("C:/Users/djfox\OneDrive/kmeans 2 output1.txt","w")                
-    for r in line:
-        for c in r:
-            outputFile.write(str(c) + " ")
-            nextLine = nextLine + 1
-            if(nextLine == 3):
-                nextLine = 0
-                outputFile.write("\n")
-                
-        print()         
+    
+    header = ['x', 'y', 'k']
+    print(line)
+    print(line[0][2])
+    with open("kmeans.csv", "w", newline="", encoding="UTF8") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for r in range(len(line)):
+            print(r)
+            row_data_x = line[r][0]
+            row_data_y = line[r][1]
+            row_data_k = line[r][2]
+            row_data = [row_data_x,row_data_y,row_data_k]
+            writer.writerow(row_data)
+    df = pd.read_csv('kmeans.csv')
+    print(df)
+    
+    
+    groups = df.groupby('k')
+    for name, group in groups:
+        plt.plot(group.x, group.y, marker='o', linestyle='', markersize=12, label=name)
+    plt.legend()
+    
+    
+    
+            
+        
+      
+                    
         
                     
                     
